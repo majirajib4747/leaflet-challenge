@@ -4,15 +4,15 @@ var earthquakeQueryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summ
 function getColor(d) {
 
     let color = '';
-    if (d < 1) {
+    if (d < 10) {
       color = '#1a9850';
-    } else if (d < 2) {
+    } else if (d < 30) {
       color = '#91cf60';
-    } else if (d < 3) {
+    } else if (d < 50) {
       color = '#d9ef8b';
-    } else if (d < 4) {
+    } else if (d < 70) {
       color = '#fee08b';
-    } else if (d < 5) {
+    } else if (d < 90) {
       color = '#fc8d59';
     } else { // magnitude 5+
       color = '#d73027';
@@ -43,8 +43,8 @@ function getColor(d) {
         var earthquakes = L.geoJSON(earthquakeData, {
           pointToLayer: function (feature, latlng) {
       
-            // magnitude determines the color
-            var color = getColor(feature.properties.mag);
+            // depth determines the color
+            var color = getColor(feature.geometry.coordinates[2]);
       
             // Add circles to map
             return L.circle(latlng, {
@@ -117,13 +117,13 @@ function getColor(d) {
         legend.onAdd = function (map) {
       
           var div = L.DomUtil.create('div', 'info legend');
-          var magnitudes = [0, 1, 2, 3, 4, 5];
-          var labels = ['0-1', '1-2', '2-3', '3-4', '4-5', '5+'];
+          var depth = [-10, 10, 30, 50, 70, 90];
+          var labels = ['-10-10', '10-30', '30-50', '50-70', '70-90', '90+'];
       
           // loop through our magnitude intervals and generate a label with a colored square for each interval
-          for (var i = 0; i < magnitudes.length; i++) {
+          for (var i = 0; i < depth.length; i++) {
             div.innerHTML +=
-              '<i style="background:' + getColor(magnitudes[i]) + '"></i> ' + labels[i] + '<br>';
+              '<i style="background:' + getColor(depth[i]) + '"></i> ' + labels[i] + '<br>';
           }
           return div;
         }; // end legend.onAdd
